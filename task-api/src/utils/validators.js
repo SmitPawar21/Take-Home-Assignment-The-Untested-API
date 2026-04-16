@@ -3,10 +3,11 @@ const VALID_PRIORITIES = ['low', 'medium', 'high'];
 
 const validateCreateTask = (body) => {
   const keyArray = Object.keys(body);
-  const error = "";
+  let error = "";
   keyArray.forEach(element => {
-    if(element!=="title" || element!=="status" || element!=="priority" || element!=="dueDate") {
+    if(element!=="title" && element!=="status" && element!=="priority" && element!=="dueDate") {
       error = "body must contain only required fields";
+      return error;
     }
   });
 
@@ -27,10 +28,11 @@ const validateCreateTask = (body) => {
 
 const validateUpdateTask = (body) => {
   const keyArray = Object.keys(body);
-  const error = "";
+  let error = "";
   keyArray.forEach(element => {
     if(element!=="title" || element!=="status" || element!=="priority" || element!=="dueDate") {
       error = "body must contain only required fields";
+      return error;
     }
   });
 
@@ -51,10 +53,11 @@ const validateUpdateTask = (body) => {
 
 const validateTaskAssignment = (body) => {
   const keyArray = Object.keys(body);
-  const error = "";
+  let error = "";
   keyArray.forEach(element => {
     if(element!=="assignee") {
       error = "body must contain only assignee";
+      return error;
     }
   });
 
@@ -65,4 +68,4 @@ const validateTaskAssignment = (body) => {
   return null;
 };
 
-module.exports = { validateCreateTask, validateUpdateTask };
+module.exports = { validateCreateTask, validateUpdateTask, validateTaskAssignment };

@@ -87,6 +87,7 @@ const hasAlreadyAssigned = (id) => {
 
 const assignTask = (id, assignee) => {
   const task = findById(id);
+  if(!task) return null;
 
   const updated = {
     ...task,

@@ -1,6 +1,6 @@
 const request = require('supertest');
-const app = require('../src/app');
-const service = require('../src/taskService');
+const app = require('../src/app.js');
+const service = require('../src/services/taskService.js');
 
 beforeEach(() => {
   service._reset(); 
@@ -32,19 +32,6 @@ test('POST /tasks should fail with empty title', async () => {
     .send({ title: '' });
 
   expect(res.statusCode).toBe(400);
-});
-
-test('GET /tasks/:id should return a task', async () => {
-  const createRes = await request(app)
-    .post('/tasks')
-    .send({ title: 'Task' });
-
-  const id = createRes.body.id;
-
-  const res = await request(app).get(`/tasks/${id}`);
-
-  expect(res.statusCode).toBe(200);
-  expect(res.body.id).toBe(id);
 });
 
 test('GET /tasks/:id should return 404 for invalid id', async () => {

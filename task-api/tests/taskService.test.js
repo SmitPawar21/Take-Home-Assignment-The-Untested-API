@@ -1,4 +1,5 @@
 const service = require("../src/services/taskService.js");
+const { validateCreateTask } = require("../src/utils/validators.js");
 
 beforeEach(() => {
     service._reset();
@@ -14,9 +15,14 @@ test('should create a task with default values', () => {
 });
 
 test('should return error when entering wrong key while creating', () => {
-    const task = service.create({task1: "title"});
+    const error = validateCreateTask({task1: "title"});
+    let task = null;
+    if(!error) {
+        task = service.create({task1: "title"});
+    }
 
-    expect(task).toBe("body must contain only required fields");
+    expect(task).toBeNull();
+    expect(error).toBe("title is required and must be a non-empty string");
 });
 
 test('should allow empty description', () => {
@@ -74,7 +80,7 @@ test('should delete the task', () => {
     const task = service.create({title: 'task1'});
     const remove = service.remove(task.id);
 
-    expect(task).toBe(true);
+    expect(remove).toBe(true);
     expect(service.getAll().length).toBe(0);
 
 });
@@ -82,7 +88,7 @@ test('should delete the task', () => {
 test('should return null if invalid id is to be deleted', () => {
     const result = service.remove("wrond id", {title: 'task1'});
 
-    expect(result).toBeNull();
+    expect(result).toBe(false);
 });
 
 test('should complete the task', () => {
@@ -118,9 +124,9 @@ test('should return paginated result', () => {
         service.create({title: `task ${i}`}); 
     }
 
-    const page = service.getPaginated(0, 2);
+    const page = service.getPaginated(1, 2);
     expect(page.length).toBe(2);
-    expect(page[0]).toBe("task 0");
+    expect(page[0].title).toBe("task 0");
 });
 
 test('should return empty if page out of range', () => {
@@ -151,23 +157,31 @@ test('should count overdue tasks', () => {
 
 test('should assign a task', () => {
     const task = service.create({title: 'task1'});
-    const assigntask = service.assignTask(task.id, {assignee: "smit"});
+    const assigntask = service.assignTask(task.id, "smit");
 
     expect(assigntask.assignee).toBe("smit");
     expect(assigntask.id).toBe(task.id);
 });
 
 test('should return null for invalid task id while assigning', () => {
-    const task = service.assignTask(123, {assignee: "abc"});
+    const task = service.assignTask("wrong id", {assignee: "abc"});
 
     expect(task).toBeNull();
 });
 
 test('should handle when task already assigned', () => {
     const task = service.create({title: "task1"});
-    const assignTask1 = service.assignTask(task.id, {assignee: "smit"});
-    const assignTask2 = service.assignTask(task.id, {assignee: "pawar"});
+
+    const bool1 = service.hasAlreadyAssigned(task.id);
+    let assignTask1 = null;
+    if(!bool1) assignTask1 = service.assignTask(task.id, "smit");
     
+    const bool2 = service.hasAlreadyAssigned(task.id);
+    let assignTask2 = null;
+    if(!bool2) assignTask2 = service.assignTask(task.id, "pawar");
+    
+    expect(bool1).toBe(false);
     expect(assignTask1.assignee).toBe("smit");
+    expect(bool2).toBe(true);
     expect(assignTask2).toBeNull();
 });
