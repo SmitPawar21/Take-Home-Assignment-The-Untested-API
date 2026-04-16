@@ -49,4 +49,20 @@ const validateUpdateTask = (body) => {
   return null;
 };
 
+const validateTaskAssignment = (body) => {
+  const keyArray = Object.keys(body);
+  const error = "";
+  keyArray.forEach(element => {
+    if(element!=="assignee") {
+      error = "body must contain only assignee";
+    }
+  });
+
+  if(!body.assignee || body.assignee==="") {
+    return "empty assignee assigned."
+  }
+
+  return null;
+};
+
 module.exports = { validateCreateTask, validateUpdateTask };

@@ -149,4 +149,25 @@ test('should count overdue tasks', () => {
   expect(stats.overdue).toBe(1);
 });
 
+test('should assign a task', () => {
+    const task = service.create({title: 'task1'});
+    const assigntask = service.assignTask(task.id, {assignee: "smit"});
 
+    expect(assigntask.assignee).toBe("smit");
+    expect(assigntask.id).toBe(task.id);
+});
+
+test('should return null for invalid task id while assigning', () => {
+    const task = service.assignTask(123, {assignee: "abc"});
+
+    expect(task).toBeNull();
+});
+
+test('should handle when task already assigned', () => {
+    const task = service.create({title: "task1"});
+    const assignTask1 = service.assignTask(task.id, {assignee: "smit"});
+    const assignTask2 = service.assignTask(task.id, {assignee: "pawar"});
+    
+    expect(assignTask1.assignee).toBe("smit");
+    expect(assignTask2).toBeNull();
+});

@@ -69,4 +69,22 @@ router.patch('/:id/complete', (req, res) => {
   res.json(task);
 });
 
+router.patch('/:id/assign', (req, res) => {
+  const error = validateTaskAssignment(req.body);
+  if(error) {
+    return res.status(400).json({ error });
+  }
+  if(!taskService.findById(req.params.id)) {
+    return res.json(404).json({ error: 'Task not found' });
+  }
+
+  const hasAssigned = taskService.hasAlreadyAssigned(req.params.id);
+  if(hasAssigned) {
+    return res.json(400).json({ error: "Task has been already assigned" });
+  }
+
+  const task = taskService.assignTask(req.params.id, assignee);
+  res.json(task);
+})
+
 module.exports = router;
