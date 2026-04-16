@@ -57,7 +57,7 @@ router.delete('/:id', (req, res) => {
     return res.status(404).json({ error: 'Task not found' });
   }
 
-  res.status(204).send();
+  res.status(200).send();
 });
 
 router.patch('/:id/complete', (req, res) => {

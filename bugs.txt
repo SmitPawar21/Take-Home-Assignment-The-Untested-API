@@ -13,3 +13,5 @@ Fix: priority: task.priority
 Bug 4: update() and create() allows invalid fields
 problem: update(id, { randomField: 123 }) -> not controlled
 fix: traverse through keys of body and validate in validators.js
+
+Bug 5: replaced status code from 204 to 200 for DELETE task route
