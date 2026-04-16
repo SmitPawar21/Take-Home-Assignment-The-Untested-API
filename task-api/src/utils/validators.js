@@ -2,6 +2,14 @@ const VALID_STATUSES = ['todo', 'in_progress', 'done'];
 const VALID_PRIORITIES = ['low', 'medium', 'high'];
 
 const validateCreateTask = (body) => {
+  const keyArray = Object.keys(body);
+  const error = "";
+  keyArray.forEach(element => {
+    if(element!=="title" || element!=="status" || element!=="priority" || element!=="dueDate") {
+      error = "body must contain only required fields";
+    }
+  });
+
   if (!body.title || typeof body.title !== 'string' || body.title.trim() === '') {
     return 'title is required and must be a non-empty string';
   }
@@ -18,7 +26,15 @@ const validateCreateTask = (body) => {
 };
 
 const validateUpdateTask = (body) => {
-  if (body.title !== undefined && (typeof body.title !== 'string' || body.title.trim() === '')) {
+  const keyArray = Object.keys(body);
+  const error = "";
+  keyArray.forEach(element => {
+    if(element!=="title" || element!=="status" || element!=="priority" || element!=="dueDate") {
+      error = "body must contain only required fields";
+    }
+  });
+
+  if (!body.title && (typeof body.title !== 'string' || body.title.trim() === '')) {
     return 'title must be a non-empty string';
   }
   if (body.status && !VALID_STATUSES.includes(body.status)) {

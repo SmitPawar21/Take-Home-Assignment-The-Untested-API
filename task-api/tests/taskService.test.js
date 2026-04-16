@@ -13,6 +13,12 @@ test('should create a task with default values', () => {
     expect(task.priority).toBe('medium');
 });
 
+test('should return error when entering wrong key while creating', () => {
+    const task = service.create({task1: "title"});
+
+    expect(task).toBe("body must contain only required fields");
+});
+
 test('should allow empty description', () => {
     const task = service.create({ title: 'task1', description: '' });
 
@@ -85,6 +91,7 @@ test('should complete the task', () => {
 
     expect(complete.status).toBe("done");
     expect(complete.completedAt).not.toBeNull();
+    expect(complete.priority).toBe(task.priority);
 });
 
 test('should return null if invalid id is to be completed', () => {
@@ -141,4 +148,5 @@ test('should count overdue tasks', () => {
   const stats = service.getStats();
   expect(stats.overdue).toBe(1);
 });
+
 
